@@ -29,15 +29,19 @@ def main():
                 if event.key == pygame.K_F2 or event.key == pygame.K_ESCAPE:
                     screen = pygame.display.set_mode((960, 720))
 
-
+        # キー入力
         key = pygame.key.get_pressed()
+        # マウス入座標／入力
+        mouseX, mouseY = pygame.mouse.get_pos()
+        mBtn1, mBtn2, mBtn3 = pygame.mouse.get_pressed()
 
+        # ボールの処理
+        ball.shot(mBtn1, mouseX, mouseY)
         ball.move()
 
+        # 描画
         table.draw(screen)
         ball.draw(screen)
-
-
 
         pygame.display.update()
         clock.tick(FRAME_LATE)
