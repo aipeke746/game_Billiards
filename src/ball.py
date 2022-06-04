@@ -6,7 +6,7 @@ import calc
 
 # ==================== 定数 ====================
 # 大きさ（半径）
-BALL_RADIUS = 28.4 * 1
+BALL_RADIUS = 28.4 / 2
 # 色
 COLOR_0 = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -66,8 +66,6 @@ def judge_stop():
         ball_vx = 0
     if abs(ball_vy) < 0.01:
         ball_vy = 0
-
-    print(ball_vx, ball_vy)
 
 
 # ボールを打つ
