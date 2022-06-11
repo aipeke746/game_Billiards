@@ -71,6 +71,16 @@ def init_pos():
 def move():
 
     for num in range(BALL_MAX):
+        if ball_f[num] == False:
+            continue
+        if ball_vx[num] == 0 and ball_vy[num] == 0:
+            continue
+
+        judge_collision(num)
+
+    for num in range(BALL_MAX):
+        if ball_f[num] == False:
+            continue
         if ball_vx[num] == 0 and ball_vy[num] == 0:
             continue
 
@@ -93,20 +103,45 @@ def move():
         ball_vx[num] *= 0.99
         ball_vy[num] *= 0.99
 
-    judge_stop()
+
+        judge_stop(num)
+
+
+
+# ボールの衝突処理判定
+def judge_collision(target):
+
+    for num in range(BALL_MAX):
+        if num == target:
+            continue
+
+        distance = math.sqrt((ball_x[target] - ball_x[num])**2 + (ball_y[target] - ball_y[num])**2)
+
+        # 衝突判定
+        if distance <= BALL_DIAMETER:
+            overlapping = abs(BALL_DIAMETER - distance)
+
+            # ボールが重なる場合
+            if overlapping > 0:
+                dis_x = ball_x[target] - ball_x[num]
+                dis_y = ball_y[target] - ball_y[num]
+                # 衝突した位置に戻す
+                if dis_x > 0:   ball_x[target] += overlapping * (distance / dis_x)
+                if dis_y > 0:   ball_y[target] += overlapping * (distance / dis_y)
+
+            ball_vx[target] = ball_vx[target] * 0.95
+            ball_vy[target] = ball_vy[target] * 0.95
+            ball_vx[num] = ball_vx[target] * 0.99
+            ball_vy[num] = ball_vy[target] * 0.99
 
 
 #ボールが止まったかの判定
-def judge_stop():
+def judge_stop(target):
 
-    for num in range(BALL_MAX):
-        if ball_vx[num] == 0 and ball_vy[num] == 0:
-            continue
-
-        if abs(ball_vx[num]) < 0.01:
-            ball_vx[num] = 0
-        if abs(ball_vy[num]) < 0.01:
-            ball_vy[num] = 0
+    if abs(ball_vx[target]) < 0.01:
+        ball_vx[target] = 0
+    if abs(ball_vy[target]) < 0.01:
+        ball_vy[target] = 0
 
 
 # ボールを打つ
@@ -115,7 +150,7 @@ def shot(mb, mx, my):
 
     # 引く
     if mb == True and shot_trigger == False and ball_vx[PLAYER] == 0 and ball_vy[PLAYER] == 0:
-        if calc.judge_shot(mx, my, ball_x[PLAYER], ball_y[PLAYER], BALL_RADIUS):
+        if judge_shot(mx, my):
             shot_x = mx
             shot_y = my
             shot_trigger = True
@@ -124,6 +159,12 @@ def shot(mb, mx, my):
         ball_vx[PLAYER] = (shot_x - mx) * 0.3
         ball_vy[PLAYER] = (shot_y - my) * 0.3
         shot_trigger = False
+
+
+def judge_shot(mx, my):
+    if (mx - ball_x[PLAYER])**2 + (my - ball_y[PLAYER])**2 <= BALL_RADIUS**2:
+        return True
+    return False
 
 
 # ボールの描画

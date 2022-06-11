@@ -18,7 +18,7 @@ tmr = 0
 # メインループ
 def main():
     global tmr
-    
+
     pygame.init()
     pygame.display.set_caption("BIlliards Game")
     screen = pygame.display.set_mode((SCREEN_WIDE, SCREEN_LENGTH))
